@@ -5,7 +5,7 @@ I/O:
 button 都使用InteruptIn。
 
 Display:
-顯示不同rate在螢幕上。
+用if else顯示不同的rate在螢幕上。
 
 Generate waveform:
 利用for loops每5毫秒改變一次AnalogOut，根據rate和上升或下降每次改變的大小會不同。
