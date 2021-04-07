@@ -12,12 +12,14 @@ InterruptIn confirmbtn(PA_2);
 EventQueue queue1(32 * EVENTS_EVENT_SIZE);
 EventQueue queue2(32 * EVENTS_EVENT_SIZE);
 EventQueue queue3(32 * EVENTS_EVENT_SIZE);
-float ADCdata[128]={0};
-int j = 0;
+DigitalIn trans(USER_BUTTON);
 
+float ADCdata[512]={0};
+int j = 0;
+int s = 0;
 bool selected = 0;
 float rate = 1;
-
+bool pretrans = trans;
 void menu()
 {
     uLCD.cls();
@@ -55,11 +57,109 @@ void select_display()
     else if (rate == 0.25) uLCD.printf("\nselected rate: 1/4\n");
     else if (rate == 0.125) uLCD.printf("\nselected rate: 1/8\n");
 }
+void waveout()
+{
+    while(1){
+        if (pretrans != trans) {
+            for (int i = 0; i < 512; i++){
+                printf("%f\r\n", ADCdata[i]);
+            }
+            pretrans = trans;
+        }
+        if (rate == 1) {
+            for (float i = 0.0f; i <= 0.90f; i += 0.05625f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+            ThisThread::sleep_for(80ms);
+            for (float i = 0.90f; i >= 0.0f; i -= 0.05625f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+        }
+        if (rate == 0.5) {
+            for (float i = 0.0f; i <= 0.90f; i += 0.1125f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+            aout=0.9f;
+            ThisThread::sleep_for(160ms);
+            for (float i = 0.90f; i >= 0.0f; i -= 0.1125f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+        }
+        if (rate == 0.25) {
+            for (float i = 0.0f; i <= 0.90f; i += 0.225f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+            aout=0.9f;
+            ThisThread::sleep_for(160ms);
+            for (float i = 0.90f; i >= 0.0f; i -= 0.225f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+        }
+        if (rate == 0.125) {
+            for (float i = 0.0f; i <= 0.90f; i += 0.45f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+            aout=0.9f;
+            ThisThread::sleep_for(220ms);
+            for (float i = 0.90f; i >= 0.0f; i -= 0.45f){
+                aout = i;
+                if (j < 512 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+            ThisThread::sleep_for(5ms);
+            }
+        }
+    }
+}
 void selection()
 {
     selected = 1;
     queue3.call(&select_display);
-
+    queue3.call(&waveout);
 }
 
 
