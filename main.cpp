@@ -14,7 +14,7 @@ EventQueue queue2(32 * EVENTS_EVENT_SIZE);
 EventQueue queue3(32 * EVENTS_EVENT_SIZE);
 DigitalIn trans(USER_BUTTON);
 
-float ADCdata[512]={0};
+float ADCdata[128]={0};
 int j = 0;
 int s = 0;
 bool selected = 0;
@@ -61,7 +61,7 @@ void waveout()
 {
     while(1){
         if (pretrans != trans) {
-            for (int i = 0; i < 512; i++){
+            for (int i = 0; i < 128; i++){
                 printf("%f\r\n", ADCdata[i]);
             }
             pretrans = trans;
@@ -69,17 +69,24 @@ void waveout()
         if (rate == 1) {
             for (float i = 0.0f; i <= 0.90f; i += 0.05625f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
                 s = !s;
             ThisThread::sleep_for(5ms);
             }
-            ThisThread::sleep_for(80ms);
+            for (int i = 0; i < 16; i ++){
+                if (j < 128 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+                ThisThread::sleep_for(5ms);
+            }
             for (float i = 0.90f; i >= 0.0f; i -= 0.05625f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
@@ -90,7 +97,7 @@ void waveout()
         if (rate == 0.5) {
             for (float i = 0.0f; i <= 0.90f; i += 0.1125f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
@@ -98,10 +105,17 @@ void waveout()
             ThisThread::sleep_for(5ms);
             }
             aout=0.9f;
-            ThisThread::sleep_for(160ms);
+            for (int i = 0; i < 32; i++){
+                if (j < 128 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+                ThisThread::sleep_for(5ms);
+            }
             for (float i = 0.90f; i >= 0.0f; i -= 0.1125f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
@@ -112,18 +126,25 @@ void waveout()
         if (rate == 0.25) {
             for (float i = 0.0f; i <= 0.90f; i += 0.225f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
                 s = !s;
-            ThisThread::sleep_for(5ms);
+                ThisThread::sleep_for(5ms);
             }
             aout=0.9f;
-            ThisThread::sleep_for(160ms);
+            for (int i = 0; i < 40; i++){
+                if (j < 128 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+                ThisThread::sleep_for(5ms);
+            }
             for (float i = 0.90f; i >= 0.0f; i -= 0.225f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
@@ -134,7 +155,7 @@ void waveout()
         if (rate == 0.125) {
             for (float i = 0.0f; i <= 0.90f; i += 0.45f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
@@ -142,10 +163,17 @@ void waveout()
             ThisThread::sleep_for(5ms);
             }
             aout=0.9f;
-            ThisThread::sleep_for(220ms);
+            for (int i = 0; i < 44; i++){
+                if (j < 128 && s) {
+                    ADCdata[j] = Ain;
+                    j++;
+                }
+                s = !s;
+                ThisThread::sleep_for(5ms);
+            }
             for (float i = 0.90f; i >= 0.0f; i -= 0.45f){
                 aout = i;
-                if (j < 512 && s) {
+                if (j < 128 && s) {
                     ADCdata[j] = Ain;
                     j++;
                 }
